@@ -18,7 +18,10 @@
 
 body {
     /* color: rgb(var(--foreground-rgb)); */
-    background: white;
+    /* background: white; */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 @layer utilities {
