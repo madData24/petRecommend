@@ -203,8 +203,16 @@ const FindDog: NextPage = () => {
                     setHasMore(false);
                 }
 
+                const newDogs = animals;
+
+                if (newDogs.length === 0) {
+                    // If there is no more data, stop fetching
+                    setHasMore(false);
+                    return;
+                }
+
                 // Append new dogs to the existing dogs array
-                setDogs((prevDogs) => [...prevDogs, ...animals]);
+                setDogs((prevDogs) => [...prevDogs, ...newDogs]);
             } catch (error) {
                 console.error("Error fetching dogs:", error);
             } finally {
@@ -361,7 +369,7 @@ const FindDog: NextPage = () => {
                     >
                         Find
                     </Button>
-                    {loading && <LinearProgress sx={{ height: 10 }} />}
+                    {/* {loading && <LinearProgress sx={{ height: 10 }} />} */}
 
                     {!hasMore && (
                         <Typography variant="subtitle1" color="textSecondary">
@@ -369,7 +377,7 @@ const FindDog: NextPage = () => {
                         </Typography>
                     )}
                 </Container>
-                <Grid container spacing={2} justifyContent="center" style={{ marginTop: "40px" }}>
+                <Grid container spacing={2} justifyContent="center" style={{ marginTop: "40px", marginBottom: "23px" }}>
                     {dogs.map((dog, index) => (
                         <Grid
                             item
@@ -378,7 +386,7 @@ const FindDog: NextPage = () => {
                             md={4}
                             lg={3}
                             xl={2}
-                            key={dog.id}
+                            key={index}
                             ref={index === dogs.length - 1 ? lastDogRef : null}
                             style={{ height: "100%", minHeight: "300px" }}
                         >
@@ -421,6 +429,7 @@ const FindDog: NextPage = () => {
                         </Grid>
                     ))}
                 </Grid>
+                {loading && <LinearProgress sx={{ height: 10, marginBottom: 30 }} />} {/* Loading animation */}
             </div>
         </>
     );
