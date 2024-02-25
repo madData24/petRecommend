@@ -1,6 +1,17 @@
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { Container, Typography, MenuItem, Select, TextField, Grid, Button, Card, CardContent, SelectChangeEvent } from "@mui/material";
+import {
+    Container,
+    Typography,
+    MenuItem,
+    Select,
+    TextField,
+    Grid,
+    Button,
+    Card,
+    CardContent,
+    SelectChangeEvent,
+} from "@mui/material";
 import Navbar from "../app/components/Navbar";
 import Image from "next/image";
 
@@ -86,15 +97,15 @@ const FindDog: NextPage = () => {
         setSelectedSize(event.target.value as string);
     };
 
-    const handleGenderChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleGenderChange = (event: SelectChangeEvent<string>) => {
         setSelectedGender(event.target.value as string);
     };
 
-    const handleAgeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleAgeChange = (event: SelectChangeEvent<string>) => {
         setSelectedAge(event.target.value as string);
     };
 
-    const handleLocationChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleLocationChange = (event: SelectChangeEvent<string>) => {
         setSelectedLocation(event.target.value as string);
     };
 
