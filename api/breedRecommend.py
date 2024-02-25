@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@app.route('/api/breedRecommend', methods=['GET'])
 def breed_recommend():
     # data = request.json
     # Process the data...
