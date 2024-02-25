@@ -13,7 +13,7 @@ export default function Home() {
         console.log("Submitting", inputValue);
         try {
             const response = await fetch("/api/breedRecommend", {
-                method: "GET", // or 'GET', depending on your API
+                method: "POST", // or 'GET', depending on your API
                 headers: {
                     "Content-Type": "application/json",
                 },
