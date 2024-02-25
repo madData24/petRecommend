@@ -134,6 +134,7 @@ const FindDog: NextPage = () => {
             url.searchParams.append("type", "dog");
             url.searchParams.append("status", "adoptable");
             url.searchParams.append("limit", "30");
+            // if (selectedBreed) url.searchParams.append("breed", selectedSize);
             if (selectedSize) url.searchParams.append("size", selectedSize);
             if (selectedGender) url.searchParams.append("gender", selectedGender);
             if (selectedAge) url.searchParams.append("age", selectedAge);
