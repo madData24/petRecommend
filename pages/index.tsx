@@ -25,6 +25,7 @@ export default function Home() {
             }
 
             const data = await response.json();
+            console.log("Data: ", data);
             setResult(data);
         } catch (error) {
             console.error("Error fetching data: ", error);
