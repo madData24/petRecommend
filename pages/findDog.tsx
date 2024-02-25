@@ -78,9 +78,9 @@ const FindDog: NextPage = () => {
     const [selectedAge, setSelectedAge] = useState<string>("");
     const [selectedLocation, setSelectedLocation] = useState<string>("");
 
-    const handleBreedChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedBreed(event.target.value as string);
-    };
+    // const handleBreedChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    //     setSelectedBreed(event.target.value as string);
+    // };
 
     const handleSizeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedSize(event.target.value as string);
