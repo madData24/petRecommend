@@ -1,4 +1,4 @@
-Flask
+Flask==2.2.2
 # gensim==4.3.2
 # nltk==3.8.1
 # spacy==3.6.0
