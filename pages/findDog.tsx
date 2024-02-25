@@ -365,7 +365,7 @@ const FindDog: NextPage = () => {
 
                     {!hasMore && (
                         <Typography variant="subtitle1" color="textSecondary">
-                            You've reached the end of the list.
+                            You reached the end of the list.
                         </Typography>
                     )}
                 </Container>
