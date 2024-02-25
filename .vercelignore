@@ -1,0 +1,14 @@
+node_modules
+.vscode
+*.log
+*.tmp
+dist
+.env.local
+.env.development
+.npm
+.cache
+Dockerfile
+docker-compose.yml
+env
+venv
+.git
