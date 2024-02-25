@@ -8,7 +8,15 @@ export default function Navbar() {
             <Container maxWidth="lg">
                 <Toolbar sx={{ color: "black", display: "flex", justifyContent: "space-between" }}>
                     <Typography variant="h6" component="div" sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                        Furtune Teller
+                        <Link href="/" passHref>
+                            <Button
+                                color="inherit"
+                                variant="text"
+                                style={{ fontWeight: "bold", color: "black", fontSize: "1.2rem" }}
+                            >
+                                Furtune Teller
+                            </Button>
+                        </Link>
                     </Typography>
                     <Box>
                         <Link href="/" passHref>

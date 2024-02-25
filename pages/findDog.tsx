@@ -11,6 +11,7 @@ import {
     Card,
     CardContent,
     SelectChangeEvent,
+    LinearProgress,
 } from "@mui/material";
 import Navbar from "../app/components/Navbar";
 import Image from "next/image";
@@ -77,6 +78,7 @@ interface Dog {
 
 const FindDog: NextPage = () => {
     const [dogs, setDogs] = useState<Dog[]>([]);
+    const [loading, setLoading] = useState<boolean>(false); // State for loading status
     const [Breed, setBreed] = useState<string>("");
     const [Size, setSize] = useState<string[]>(["small", "medium", "large", "xlarge"]);
     const [Gender, setGender] = useState<string[]>(["male", "female"]);
@@ -110,6 +112,7 @@ const FindDog: NextPage = () => {
     };
 
     const handleFindClick = async () => {
+        setLoading(true); // Set loading to true when submitting form
         try {
             const tokenResponse = await fetch("https://api.petfinder.com/v2/oauth2/token", {
                 method: "POST",
@@ -159,6 +162,8 @@ const FindDog: NextPage = () => {
             setDogs(animals); // Set the dogs data
         } catch (error) {
             console.error("Error:", error);
+        } finally {
+            setLoading(false); // Set loading to false after receiving response or error
         }
     };
 
@@ -176,7 +181,6 @@ const FindDog: NextPage = () => {
                         </p>
                     </Typography>
                 </Container>
-
                 <Container>
                     <Grid container spacing={2} justifyContent="center">
                         <Grid item xs={12} sm={6} md={3}>
@@ -241,19 +245,18 @@ const FindDog: NextPage = () => {
                         </Grid>
                     </Grid>
                 </Container>
-
                 <Container maxWidth="md" style={{ textAlign: "center", marginTop: "32px" }}>
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={handleFindClick}
-                        style={{ marginTop: 16, width: 200, height: 48 }}
+                        style={{ marginTop: 16, marginBottom: "40px", width: 200, height: 48, color: "black" }}
                     >
                         Find
                     </Button>
+                    {loading && <LinearProgress sx={{ height: 10 }} />}
                 </Container>
-
-                <Grid container spacing={2} justifyContent="center">
+                <Grid container spacing={2} justifyContent="center" style={{ marginTop: "40px" }}>
                     {dogs.map((dog, index) => (
                         <Grid
                             item
@@ -266,7 +269,7 @@ const FindDog: NextPage = () => {
                             style={{ height: "100%", minHeight: "300px" }}
                         >
                             <Card style={{ height: "100%" }}>
-                                <CardContent style={{ textAlign: "left", height: "100%" }}>
+                                <CardContent style={{ textAlign: "center", height: "100%" }}>
                                     {dog.primary_photo_cropped ? (
                                         <img
                                             src={dog.primary_photo_cropped.full}
@@ -284,14 +287,17 @@ const FindDog: NextPage = () => {
                                     <Typography variant="h6" style={{ textAlign: "center" }}>
                                         Name: {dog.name}
                                     </Typography>
-                                    <Typography>Breed: {dog.breeds.primary}</Typography>
-                                    <Typography>Age: {dog.age}</Typography>
-                                    <Typography>Gender: {dog.gender}</Typography>
-                                    <Typography>Size: {dog.size}</Typography>
-                                    <Typography>Description: {dog.description}</Typography>
+                                    <Typography style={{ textAlign: "center" }}>Breed: {dog.breeds.primary}</Typography>
+                                    <Typography style={{ textAlign: "center" }}>Age: {dog.age}</Typography>
+                                    <Typography style={{ textAlign: "center" }}>Gender: {dog.gender}</Typography>
+                                    <Typography style={{ textAlign: "center" }}>Size: {dog.size}</Typography>
+                                    <Typography style={{ textAlign: "left" }}>
+                                        Description: {dog.description}
+                                    </Typography>
                                     <Button
                                         variant="contained"
                                         color="primary"
+                                        style={{ color: "black" }}
                                         onClick={() => window.open(dog.url, "_blank", "noopener noreferrer")}
                                     >
                                         Adopt Me!
