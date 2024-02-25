@@ -1,10 +1,11 @@
-from http.server import BaseHTTPRequestHandler
- 
-class handler(BaseHTTPRequestHandler):
- 
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/plain')
-        self.end_headers()
-        self.wfile.write('Hello, world! FROM PYTHON SERVERLESS!!!'.encode('utf-8'))
-        return
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/', methods=['POST'])
+def breed_recommend():
+    data = request.json
+    # Process the data...
+    # For example, you might be processing breed recommendation logic here
+
+    return jsonify({"message": "PYTHON API SUCCESSFUL!", "data": data})
