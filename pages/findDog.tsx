@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState, useRef } from "react";
 import {
     Container,
     Typography,
@@ -85,6 +85,13 @@ const FindDog: NextPage = () => {
     const [Age, setAge] = useState<string[]>(["baby", "young", "adult", "senior"]);
     const [Location, setLocation] = useState<string>("");
 
+    const [page, setPage] = useState<number>(1); // Track the current page
+    const [hasMore, setHasMore] = useState<boolean>(true); // Track if there is more data to load
+
+    // Use useRef to access the last element in the list
+    const observer = useRef<IntersectionObserver | null>(null);
+    const lastDogRef = useRef<HTMLDivElement | null>(null);
+
     const [selectedBreed, setSelectedBreed] = useState<string>("");
     const [selectedSize, setSelectedSize] = useState<string>("");
     const [selectedGender, setSelectedGender] = useState<string>("");
@@ -111,8 +118,108 @@ const FindDog: NextPage = () => {
         setSelectedLocation(event.target.value);
     };
 
+    useEffect(() => {
+        observer.current = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    setPage((prevPage) => prevPage + 1);
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (lastDogRef.current) {
+            observer.current.observe(lastDogRef.current);
+        }
+
+        return () => observer.current?.disconnect();
+    }, [hasMore, lastDogRef]);
+
+    useEffect(() => {
+        // Observe the lastDogRef when it changes
+        if (lastDogRef.current) {
+            observer.current?.observe(lastDogRef.current);
+        }
+
+        // Clean up the observer when the component unmounts
+        return () => {
+            observer.current?.disconnect();
+        };
+    }, [dogs]); // Re-run the effect when dogs change
+
+    useEffect(() => {
+        const fetchDogs = async () => {
+            setLoading(true);
+            try {
+                const tokenResponse = await fetch("https://api.petfinder.com/v2/oauth2/token", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        grant_type: "client_credentials",
+                        client_id: "RYkL8o0DxVBE98vMdkRvVCEGTw7SkgIAXhNsISaahLGML34szc",
+                        client_secret: "JXf2XvJnSxUnunToKxAQWfJVZo9qwrF0i1wh555r",
+                    }),
+                });
+
+                if (!tokenResponse.ok) {
+                    throw new Error("Failed to obtain token");
+                }
+
+                const { access_token } = await tokenResponse.json();
+
+                // Construct URL with query parameters
+                const url = new URL("https://api.petfinder.com/v2/animals");
+                url.searchParams.append("type", "dog");
+                url.searchParams.append("status", "adoptable");
+                url.searchParams.append("limit", "30");
+                url.searchParams.append("page", page.toString());
+                if (selectedSize) url.searchParams.append("size", selectedSize);
+                if (selectedGender) url.searchParams.append("gender", selectedGender);
+                if (selectedAge) url.searchParams.append("age", selectedAge);
+                if (selectedLocation) url.searchParams.append("location", selectedLocation);
+
+                const dogsResponse = await fetch(url.toString(), {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${access_token}`,
+                    },
+                });
+
+                if (!dogsResponse.ok) {
+                    throw new Error("Failed to fetch dogs");
+                }
+
+                const { animals, pagination } = await dogsResponse.json();
+                const { count_per_page, total_count, current_page, total_pages, _links } = pagination;
+                const { previous, next } = _links;
+
+                if (next && next.href) {
+                    // If there is a next page, set hasMore to true
+                    setHasMore(true);
+                } else {
+                    // Otherwise, there are no more pages to load
+                    setHasMore(false);
+                }
+
+                // Append new dogs to the existing dogs array
+                setDogs((prevDogs) => [...prevDogs, ...animals]);
+            } catch (error) {
+                console.error("Error fetching dogs:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDogs();
+    }, [page, selectedSize, selectedGender, selectedAge, selectedLocation]);
+
     const handleFindClick = async () => {
         setLoading(true); // Set loading to true when submitting form
+        setPage(1); // Reset to the first page
+        setDogs([]); // Clear existing dogs data
+        setHasMore(true); // Reset hasMore to true
         try {
             const tokenResponse = await fetch("https://api.petfinder.com/v2/oauth2/token", {
                 method: "POST",
@@ -255,6 +362,12 @@ const FindDog: NextPage = () => {
                         Find
                     </Button>
                     {loading && <LinearProgress sx={{ height: 10 }} />}
+
+                    {!hasMore && (
+                        <Typography variant="subtitle1" color="textSecondary">
+                            You've reached the end of the list.
+                        </Typography>
+                    )}
                 </Container>
                 <Grid container spacing={2} justifyContent="center" style={{ marginTop: "40px" }}>
                     {dogs.map((dog, index) => (
@@ -265,7 +378,8 @@ const FindDog: NextPage = () => {
                             md={4}
                             lg={3}
                             xl={2}
-                            key={index}
+                            key={dog.id}
+                            ref={index === dogs.length - 1 ? lastDogRef : null}
                             style={{ height: "100%", minHeight: "300px" }}
                         >
                             <Card style={{ height: "100%" }}>
