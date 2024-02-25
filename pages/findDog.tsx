@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
     Container,
     Typography,
@@ -105,8 +105,8 @@ const FindDog: NextPage = () => {
         setSelectedAge(event.target.value as string);
     };
 
-    const handleLocationChange = (event: SelectChangeEvent<string>) => {
-        setSelectedLocation(event.target.value as string);
+    const handleLocationChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSelectedLocation(event.target.value);
     };
 
     const handleFindClick = async () => {
