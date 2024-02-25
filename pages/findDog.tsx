@@ -245,6 +245,7 @@ const FindDog: NextPage = () => {
                 <Container maxWidth="md" style={{ textAlign: "center", marginTop: "32px" }}>
                     <Button
                         variant="contained"
+                        color="primary"
                         onClick={handleFindClick}
                         style={{ marginTop: 16, width: 200, height: 48 }}
                     >
