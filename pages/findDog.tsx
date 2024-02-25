@@ -153,139 +153,67 @@ const FindDog: NextPage = () => {
     return (
         <div>
             <Navbar />
-            <div maxWidth="md" style={{ marginTop: "50px", textAlign: "center" }}>
-                <Typography variant="h4">Find Your Perfect Dog Companion</Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                    <p className="text-gray-500 mb-12 text-base animate-in fade-in slide-in-from-bottom-4 duration-1200 ease-in-out">
-                        Select the Size, Gender, Age, and Location of the dog you are looking for. <br></br> Location
-                        must be in the format of &quot;City, State&quot; or &quot;Zip Code&quot; <br></br> If you
-                        don&apos;t choose any, we will show you all the dogs available.
-                    </p>
-                </Typography>
+            <Container maxWidth="md" style={{ marginTop: "50px", textAlign: "center" }}>
+                <div style={{ overflowY: "auto" }}>
+                    <Typography variant="h4">Find Your Perfect Dog Companion</Typography>
+                    <Typography variant="subtitle1" gutterBottom>
+                        <p className="text-gray-500 mb-12 text-base animate-in fade-in slide-in-from-bottom-4 duration-1200 ease-in-out">
+                            Select the Size, Gender, Age, and Location of the dog you are looking for. <br></br>{" "}
+                            Location must be in the format of &quot;City, State&quot; or &quot;Zip Code&quot; <br></br>{" "}
+                            If you don&apos;t choose any, we will show you all the dogs available.
+                        </p>
+                    </Typography>
 
-                <Container>
                     <Grid container spacing={2} justifyContent="center">
-                        <Grid item xs={12} sm={6} md={3}>
-                            <Select
-                                value={selectedSize}
-                                onChange={handleSizeChange}
-                                displayEmpty
-                                style={{ minWidth: 200 }}
+                        {dogs.map((dog, index) => (
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                xl={2}
+                                key={index}
+                                style={{ height: "100%", maxWidth: "300px", maxHeight: "400px" }}
                             >
-                                <MenuItem value="" disabled>
-                                    Size
-                                </MenuItem>
-                                {Size.map((size, index) => (
-                                    <MenuItem key={index} value={size}>
-                                        {size}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
-                            <Select
-                                value={selectedGender}
-                                onChange={handleGenderChange}
-                                displayEmpty
-                                style={{ minWidth: 200 }}
-                            >
-                                <MenuItem value="" disabled>
-                                    Gender
-                                </MenuItem>
-                                {Gender.map((gender, index) => (
-                                    <MenuItem key={index} value={gender}>
-                                        {gender}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
-                            <Select
-                                value={selectedAge}
-                                onChange={handleAgeChange}
-                                displayEmpty
-                                style={{ minWidth: 200 }}
-                            >
-                                <MenuItem value="" disabled>
-                                    Age
-                                </MenuItem>
-                                {Age.map((age, index) => (
-                                    <MenuItem key={index} value={age}>
-                                        {age}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
-                            <TextField
-                                label="Location"
-                                value={selectedLocation}
-                                onChange={handleLocationChange}
-                                variant="outlined"
-                                style={{ minWidth: 200 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} style={{ marginTop: 32, marginBottom: 32 }}>
-                            <Button
-                                variant="contained"
-                                onClick={handleFindClick}
-                                style={{ marginTop: 16, width: 200, height: 48 }}
-                            >
-                                Find
-                            </Button>
-                        </Grid>
+                                <Card style={{ height: "100%" }}>
+                                    <CardContent style={{ textAlign: "left", height: "100%" }}>
+                                        {dog.primary_photo_cropped ? (
+                                            <img
+                                                src={dog.primary_photo_cropped.full}
+                                                alt={dog.name}
+                                                style={{
+                                                    width: "100%",
+                                                    height: "auto",
+                                                    maxHeight: "200px",
+                                                    objectFit: "cover",
+                                                }}
+                                            />
+                                        ) : (
+                                            <Typography>No photo available</Typography>
+                                        )}
+                                        <Typography variant="h6" style={{ textAlign: "center" }}>
+                                            Name: {dog.name}
+                                        </Typography>
+                                        <Typography>Breed: {dog.breeds.primary}</Typography>
+                                        <Typography>Age: {dog.age}</Typography>
+                                        <Typography>Gender: {dog.gender}</Typography>
+                                        <Typography>Size: {dog.size}</Typography>
+                                        <Typography>Description: {dog.description}</Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => window.open(dog.url, "_blank", "noopener noreferrer")}
+                                        >
+                                            Adopt Me!
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
                     </Grid>
-                </Container>
-
-                <Grid container spacing={2} justifyContent="center">
-                    {dogs.map((dog, index) => (
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            xl={2}
-                            key={index}
-                            style={{ height: "100%", minHeight: "300px" }}
-                        >
-                            <Card style={{ height: "100%" }}>
-                                <CardContent style={{ textAlign: "left", height: "100%" }}>
-                                    {dog.primary_photo_cropped ? (
-                                        <img
-                                            src={dog.primary_photo_cropped.full}
-                                            alt={dog.name}
-                                            style={{
-                                                width: "100%",
-                                                height: "auto",
-                                                maxHeight: "200px",
-                                                objectFit: "cover",
-                                            }}
-                                        />
-                                    ) : (
-                                        <Typography>No photo available</Typography>
-                                    )}
-                                    <Typography variant="h6" style={{ textAlign: "center" }}>
-                                        Name: {dog.name}
-                                    </Typography>
-                                    <Typography>Breed: {dog.breeds.primary}</Typography>
-                                    <Typography>Age: {dog.age}</Typography>
-                                    <Typography>Gender: {dog.gender}</Typography>
-                                    <Typography>Size: {dog.size}</Typography>
-                                    <Typography>Description: {dog.description}</Typography>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => window.open(dog.url, "_blank", "noopener noreferrer")}
-                                    >
-                                        Adopt Me!
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </div>
+                </div>
+            </Container>
         </div>
     );
 };
